@@ -1,15 +1,16 @@
-print("hello, world!")
-name = ("danny")
+print("Hello, world!")
 
-print(name)
+name = "Danny"
 age = 20
-print(name)
-print(age)
-reactorpower = float(input("enter the reactor power "))
+
+print("Name:", name)
+print("Age:", age)
+
+reactor_power = float(input("Enter the reactor thermal power in MW: "))
 efficiency = 0.33
-electricalpower = (reactorpower) * (efficiency)
-if electricalpower > 3000:
-	print("WARNING")
-print("electrical power:", electricalpower, "MW")
+electrical_power = reactor_power * efficiency
+	
+if electrical_power > 3000:
+    print("WARNING: Electrical power exceeds 3000 MW")
 
-
+print("Electrical power:", electrical_power, "MW")
