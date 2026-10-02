@@ -1,5 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
+parser = argparse.ArgumentParser(description="Compare numerical methods for radioactive decay")
+parser.add_argument("--half-life", default=8.02, help="Isotope half-life in days")
+parser = argparse.ArgumentParser(description="Compare numerical methods for radioactive decay")
+parser.add_argument("--half-life",type=float,default=8.02)
+
+parser.add_argument("--initial-atoms",type=int,default=1_000_000)
+
+parser.add_argument("--days",type=float,default=40)
+
+args = parser.parse_args()
 
 # Foward Euler method
 def forward_euler(time, initial_value, decay_constant):
@@ -30,12 +41,13 @@ def improved_euler(time, initial_value, decay_constant):
     return result
 
 # Initial values
-atoms_initial = 1_000_000
-half_life = 8.02
+atoms_initial = args.initial_atoms
+duration = args.days
+half_life = args.half_life
 decay_constant = np.log(2) / half_life
 
 # Main and Euler solutions
-time = np.linspace(0, 40, 200)
+time = np.linspace(0, duration, 200)
 
 atoms = atoms_initial * np.exp(-decay_constant * time)
 atoms_euler = forward_euler(time,atoms_initial,decay_constant)
@@ -47,7 +59,7 @@ forward_errors = []
 improved_errors = []
 
 for points in point_counts:
-    test_time = np.linspace(0, 40, points)
+    test_time = np.linspace(0, duration, points)
 
     test_euler = forward_euler(test_time, atoms_initial, decay_constant)
 
