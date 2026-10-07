@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+
 parser = argparse.ArgumentParser(description="Compare numerical methods for radioactive decay")
-parser.add_argument("--half-life", default=8.02, help="Isotope half-life in days")
-parser = argparse.ArgumentParser(description="Compare numerical methods for radioactive decay")
+
 parser.add_argument("--half-life",type=float,default=8.02)
 
 parser.add_argument("--initial-atoms",type=int,default=1_000_000)
