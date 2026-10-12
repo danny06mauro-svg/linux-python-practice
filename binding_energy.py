@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 import plotly.graph_objects as go
 import argparse
 
@@ -6,7 +7,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("--protons", type=int, required=True)
 parser.add_argument("--neutrons", type=int, required=True)
-
+parser.add_argument("--plot", action="store_true")
 args = parser.parse_args()
 
 if args.protons < 0 or args.neutrons < 0:
@@ -15,12 +16,16 @@ if args.protons < 0 or args.neutrons < 0:
 if args.protons + args.neutrons == 0:
     parser.error("A nucleus must contain at least one nucleon.")
 
-args = parser.parse_args()
-print(args.protons)
-print(args.neutrons)
-
-# --- SEMF Math Engine ---
+# SEMF Math Engine 
 a_V, a_S, a_C, a_A, a_P = 15.67, 17.23, 0.75, 23.2, 12.0
+
+def calculate_total_binding(Z, N):
+    A = Z + N
+    if A <= 0:
+        return 0.0
+
+    binding_per_nucleon = calculate_be_per_nucleon(Z, N)
+    return binding_per_nucleon * A
 
 def calculate_be_per_nucleon(Z, N):
     A = Z + N
@@ -33,14 +38,15 @@ def calculate_be_per_nucleon(Z, N):
     return max(0.0, (E_volume - E_surface - E_coulomb - E_asymmetry + delta) / A)
 
 binding_per_nucleon = calculate_be_per_nucleon(args.protons, args.neutrons)
+total_binding = calculate_total_binding(args.protons, args.neutrons)
 
 print(f"Binding energy per nucleon: {binding_per_nucleon:.3f} MeV")
-vectorized_be = np.vectorize(calculate_be_per_nucleon)
-
-total_nucleons = args.protons + args.neutrons
-total_binding = binding_per_nucleon * total_nucleons
-
 print(f"Total binding energy: {total_binding:.3f} MeV")
+
+if not args.plot:
+    sys.exit()
+
+vectorized_be = np.vectorize(calculate_be_per_nucleon)
 z_range = np.arange(1, 151)
 n_range = np.arange(1, 151)
 Z, N = np.meshgrid(z_range, n_range)
